@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BookOpen, Menu, X, Settings, Bell, ShoppingCart, User, LogOut } from 'lucide-react';
-import ProfileDropdown from './ProfileDropdown';
+// import ProfileDropdown from './ProfileDropdown';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
