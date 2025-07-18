@@ -4,6 +4,30 @@ import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const slides = [
+    {
+      id: 1,
+      image: "https://images.pexels.com/photos/1370295/pexels-photo-1370295.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop"
+    },
+    {
+      id: 2,
+      image: "https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop"
+    },
+    {
+      id: 3,
+      image: "https://images.pexels.com/photos/1029141/pexels-photo-1029141.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop"
+    },
+    {
+      id: 4,
+      image: "https://images.pexels.com/photos/256541/pexels-photo-256541.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop"
+    },
+    {
+      id: 5,
+      image: "https://images.pexels.com/photos/694740/pexels-photo-694740.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop"
+    }
+  ];
 
   const handleBrowseBooks = () => {
     navigate('/browse');
