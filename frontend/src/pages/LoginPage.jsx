@@ -71,8 +71,8 @@ const LoginPage = () => {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden">
         {/* Close Button */}
         <button 
-          // onClick={() => navigate('/')}
-          // className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"
+          onClick={() => navigate('/')}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"
         >
           <X className="w-6 h-6" />
         </button>
