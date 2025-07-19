@@ -128,6 +128,102 @@ const AdminDashboardPage = () => {
     alert(`User ${action} successfully!`);
   };
 
+  const renderOverview = () => (
+    <div className="space-y-6">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-600">Total Users</p>
+              <p className="text-2xl font-bold text-gray-800">{adminStats.totalUsers.toLocaleString()}</p>
+            </div>
+            <Users className="w-8 h-8 text-blue-500" />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-600">Total Books</p>
+              <p className="text-2xl font-bold text-gray-800">{adminStats.totalBooks.toLocaleString()}</p>
+            </div>
+            <BookOpen className="w-8 h-8 text-green-500" />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-600">Total Sales</p>
+              <p className="text-2xl font-bold text-gray-800">{adminStats.totalSales.toLocaleString()}</p>
+            </div>
+            <TrendingUp className="w-8 h-8 text-purple-500" />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-600">Total Revenue</p>
+              <p className="text-2xl font-bold text-gray-800">Rs. {adminStats.totalRevenue.toLocaleString()}</p>
+            </div>
+            <DollarSign className="w-8 h-8 text-yellow-500" />
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+            <AlertTriangle className="w-5 h-5 mr-2 text-orange-500" />
+            Pending Approvals ({adminStats.pendingApprovals})
+          </h3>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+              <span className="text-sm text-gray-700">Book Listings</span>
+              <span className="bg-orange-500 text-white px-2 py-1 rounded-full text-xs">15</span>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+              <span className="text-sm text-gray-700">User Verifications</span>
+              <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs">8</span>
+            </div>
+          </div>
+          <button 
+            onClick={() => setActiveTab('approvals')}
+            className="w-full mt-4 bg-gradient-to-r from-orange-400 to-orange-500 text-white py-2 rounded-lg hover:from-orange-500 hover:to-orange-600 transition-all"
+          >
+            Review Pending Items
+          </button>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+            <Shield className="w-5 h-5 mr-2 text-red-500" />
+            Reported Items ({adminStats.reportedItems})
+          </h3>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+              <span className="text-sm text-gray-700">Fake Listings</span>
+              <span className="bg-red-500 text-white px-2 py-1 rounded-full text-xs">4</span>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+              <span className="text-sm text-gray-700">Spam Users</span>
+              <span className="bg-yellow-500 text-white px-2 py-1 rounded-full text-xs">3</span>
+            </div>
+          </div>
+          <button 
+            onClick={() => setActiveTab('reports')}
+            className="w-full mt-4 bg-gradient-to-r from-red-400 to-red-500 text-white py-2 rounded-lg hover:from-red-500 hover:to-red-600 transition-all"
+          >
+            Review Reports
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
       {/* Header */}
