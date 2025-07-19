@@ -27,36 +27,36 @@ const AdminDashboardPage = () => {
   const recentUsers = [
     {
       id: 1,
-      name: 'Rajesh Kumar Sharma',
-      email: 'rajesh@example.com',
+      name: 'Aakriti Rasaili',
+      email: 'akriti.rasaily33@gmail.com',
       joinDate: '2024-01-15',
       status: 'active',
       totalBooks: 12,
       totalSales: 8,
       rating: 4.8,
-      avatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'
+      avatar: 'https://i.imgur.com/VeKz25x.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'
     },
     {
       id: 2,
-      name: 'Priya Kumari Thapa',
-      email: 'priya@example.com',
+      name: 'Kamala Shrestha',
+      email: 'priya@gmail.com',
       joinDate: '2024-01-10',
       status: 'active',
       totalBooks: 28,
       totalSales: 15,
       rating: 4.9,
-      avatar: 'https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'
+      avatar: 'https://i.imgur.com/7WBwRDH.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'
     },
     {
       id: 3,
-      name: 'Amit Kumar Gurung',
-      email: 'amit@example.com',
+      name: 'Amit Gurung',
+      email: 'amit@egmail.com',
       joinDate: '2024-01-08',
       status: 'suspended',
       totalBooks: 7,
       totalSales: 3,
       rating: 3.2,
-      avatar: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'
+      avatar: 'https://i.imgur.com/qYpBNBl.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'
     }
   ];
 
@@ -65,11 +65,11 @@ const AdminDashboardPage = () => {
       id: 1,
       title: 'Advanced Physics Textbook',
       author: 'Dr. Smith',
-      seller: 'Rajesh Kumar',
+      seller: 'Aakriti Rasaili',
       price: 1200,
       condition: 'Good',
       category: 'Academic',
-      submittedDate: '2024-01-20',
+      submittedDate: '2025-06-20',
       status: 'pending',
       image: 'https://images.pexels.com/photos/1029141/pexels-photo-1029141.jpeg?auto=compress&cs=tinysrgb&w=150&h=200&fit=crop'
     },
@@ -77,11 +77,11 @@ const AdminDashboardPage = () => {
       id: 2,
       title: 'Harry Potter Complete Set',
       author: 'J.K. Rowling',
-      seller: 'Priya Thapa',
+      seller: 'Kamala Shrestha',
       price: 2500,
       condition: 'Excellent',
       category: 'Fiction',
-      submittedDate: '2024-01-19',
+      submittedDate: '2025-06-19',
       status: 'pending',
       image: 'https://images.pexels.com/photos/1029141/pexels-photo-1029141.jpeg?auto=compress&cs=tinysrgb&w=150&h=200&fit=crop'
     }
@@ -435,13 +435,6 @@ const AdminDashboardPage = () => {
             </div>
 
             <div className="flex items-center space-x-4">
-              <button
-                onClick={() => navigate('/')}
-                className="flex items-center space-x-2 text-gray-300 hover:text-yellow-400 transition-colors"
-              >
-                <BookOpen className="w-5 h-5" />
-                <span>Go to Homepage</span>
-              </button>
               <button className="text-gray-300 hover:text-yellow-400 transition-colors">
                 <Bell className="w-6 h-6" />
               </button>
