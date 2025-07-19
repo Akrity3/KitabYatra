@@ -383,6 +383,44 @@ const AdminDashboardPage = () => {
     </div>
   );
 
+  const renderReports = () => (
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Reported Items</h2>
+      
+      <div className="space-y-4">
+        {reportedItems.map((item) => (
+          <div key={item.id} className="border rounded-lg p-4 hover:shadow-lg transition-shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">{item.title}</h3>
+                <p className="text-gray-600">Reported by: {item.reporter}</p>
+                <p className="text-gray-600">Reason: {item.reason}</p>
+                <p className="text-sm text-gray-500">Date: {item.date}</p>
+              </div>
+              <div className="text-right">
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  item.status === 'investigating' ? 'bg-yellow-100 text-yellow-800' : 
+                  item.status === 'resolved' ? 'bg-green-100 text-green-800' : 
+                  'bg-red-100 text-red-800'
+                }`}>
+                  {item.status}
+                </span>
+                <div className="flex space-x-2 mt-4">
+                  <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                    Investigate
+                  </button>
+                  <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                    Resolve
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
       {/* Header */}
