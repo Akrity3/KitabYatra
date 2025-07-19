@@ -11,6 +11,102 @@ import {
 const AdminDashboardPage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
+
+  // Sample admin data
+  const adminStats = {
+    totalUsers: 2847,
+    totalBooks: 15632,
+    totalSales: 8945,
+    totalRevenue: 2456789,
+    pendingApprovals: 23,
+    reportedItems: 7
+  };
+
+  const recentUsers = [
+    {
+      id: 1,
+      name: 'Rajesh Kumar Sharma',
+      email: 'rajesh@example.com',
+      joinDate: '2024-01-15',
+      status: 'active',
+      totalBooks: 12,
+      totalSales: 8,
+      rating: 4.8,
+      avatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'
+    },
+    {
+      id: 2,
+      name: 'Priya Kumari Thapa',
+      email: 'priya@example.com',
+      joinDate: '2024-01-10',
+      status: 'active',
+      totalBooks: 28,
+      totalSales: 15,
+      rating: 4.9,
+      avatar: 'https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'
+    },
+    {
+      id: 3,
+      name: 'Amit Kumar Gurung',
+      email: 'amit@example.com',
+      joinDate: '2024-01-08',
+      status: 'suspended',
+      totalBooks: 7,
+      totalSales: 3,
+      rating: 3.2,
+      avatar: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'
+    }
+  ];
+
+  const pendingBooks = [
+    {
+      id: 1,
+      title: 'Advanced Physics Textbook',
+      author: 'Dr. Smith',
+      seller: 'Rajesh Kumar',
+      price: 1200,
+      condition: 'Good',
+      category: 'Academic',
+      submittedDate: '2024-01-20',
+      status: 'pending',
+      image: 'https://images.pexels.com/photos/1029141/pexels-photo-1029141.jpeg?auto=compress&cs=tinysrgb&w=150&h=200&fit=crop'
+    },
+    {
+      id: 2,
+      title: 'Harry Potter Complete Set',
+      author: 'J.K. Rowling',
+      seller: 'Priya Thapa',
+      price: 2500,
+      condition: 'Excellent',
+      category: 'Fiction',
+      submittedDate: '2024-01-19',
+      status: 'pending',
+      image: 'https://images.pexels.com/photos/1029141/pexels-photo-1029141.jpeg?auto=compress&cs=tinysrgb&w=150&h=200&fit=crop'
+    }
+  ];
+
+  const reportedItems = [
+    {
+      id: 1,
+      type: 'book',
+      title: 'Suspicious Book Listing',
+      reporter: 'User123',
+      reason: 'Fake condition description',
+      date: '2024-01-18',
+      status: 'investigating'
+    },
+    {
+      id: 2,
+      type: 'user',
+      title: 'Spam Seller Account',
+      reporter: 'User456',
+      reason: 'Multiple fake listings',
+      date: '2024-01-17',
+      status: 'resolved'
+    }
+  ];
 
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
