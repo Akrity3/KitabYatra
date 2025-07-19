@@ -500,22 +500,36 @@ const AdminDashboardPage = () => {
 
                 <button
                   onClick={() => setActiveTab('approvals')}
-                  className={`w-full text-left px-4 py-2 rounded-lg transition-colors flex items-center ${
+                  className={`w-full text-left px-4 py-2 rounded-lg transition-colors flex items-center justify-between ${
                     activeTab === 'approvals' ? 'bg-red-50 text-red-700' : 'hover:bg-gray-50'
                   }`}
                 >
-                  <CheckCircle className="w-5 h-5 mr-2" />
-                  Approvals
+                  <div className="flex items-center">
+                    <CheckCircle className="w-5 h-5 mr-2" />
+                    Approvals
+                  </div>
+                  {adminStats.pendingApprovals > 0 && (
+                    <span className="bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {adminStats.pendingApprovals}
+                    </span>
+                  )}
                 </button>
 
                 <button
                   onClick={() => setActiveTab('reports')}
-                  className={`w-full text-left px-4 py-2 rounded-lg transition-colors flex items-center ${
+                  className={`w-full text-left px-4 py-2 rounded-lg transition-colors flex items-center justify-between ${
                     activeTab === 'reports' ? 'bg-red-50 text-red-700' : 'hover:bg-gray-50'
                   }`}
                 >
-                  <Shield className="w-5 h-5 mr-2" />
-                  Reports
+                  <div className="flex items-center">
+                    <Shield className="w-5 h-5 mr-2" />
+                    Reports
+                  </div>
+                  {adminStats.reportedItems > 0 && (
+                    <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {adminStats.reportedItems}
+                    </span>
+                  )}
                 </button>
 
                 <button
@@ -533,10 +547,22 @@ const AdminDashboardPage = () => {
 
           {/* Main Content */}
           <div className="lg:col-span-3">
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Welcome to Admin Dashboard</h2>
-              <p className="text-gray-600">Select a tab from the sidebar to get started.</p>
-            </div>
+            {activeTab === 'overview' && renderOverview()}
+            {activeTab === 'users' && renderUsers()}
+            {activeTab === 'approvals' && renderApprovals()}
+            {activeTab === 'reports' && renderReports()}
+            {activeTab === 'books' && (
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold text-gray-800 mb-6">Book Management</h2>
+                <p className="text-gray-600">Book management functionality will be implemented here.</p>
+              </div>
+            )}
+            {activeTab === 'analytics' && (
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold text-gray-800 mb-6">Analytics & Reports</h2>
+                <p className="text-gray-600">Analytics dashboard will be implemented here.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
