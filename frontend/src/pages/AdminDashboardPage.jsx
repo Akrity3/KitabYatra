@@ -113,6 +113,21 @@ const AdminDashboardPage = () => {
     navigate('/admin');
   };
 
+  const handleApproveBook = (bookId) => {
+    console.log('Approving book:', bookId);
+    alert('Book approved successfully!');
+  };
+
+  const handleRejectBook = (bookId) => {
+    console.log('Rejecting book:', bookId);
+    alert('Book rejected!');
+  };
+
+  const handleUserAction = (userId, action) => {
+    console.log(`${action} user:`, userId);
+    alert(`User ${action} successfully!`);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
       {/* Header */}
