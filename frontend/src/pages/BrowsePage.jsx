@@ -120,6 +120,24 @@ const BrowsePage = () => {
     }
   ];
 
+  // Filtering logic
+  const filteredBooks = books.filter(book => {
+    const matchesSearch =
+      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === 'all' || book.category.toLowerCase() === selectedCategory.toLowerCase();
+    let matchesPrice = true;
+    if (priceRange !== 'all') {
+      const [min, max] = priceRange.split('-').map(p => p.replace('+', ''));
+      if (max) {
+        matchesPrice = book.price >= parseInt(min) && book.price <= parseInt(max);
+      } else {
+        matchesPrice = book.price >= parseInt(min);
+      }
+    }
+    return matchesSearch && matchesCategory && matchesPrice;
+  });
   
       <Footer />
 
