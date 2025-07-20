@@ -140,6 +140,62 @@ const DashboardPage = () => {
     localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
   };
 
+  // --- SECTION RENDERERS ---
+
+  // Overview
+  const renderOverview = () => (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-600 text-sm">Wishlist Items</p>
+              <p className="text-2xl font-bold text-gray-800">{wishlistItems.length}</p>
+            </div>
+            <Heart className="w-8 h-8 text-red-500" />
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-600 text-sm">Total Purchases</p>
+              <p className="text-2xl font-bold text-gray-800">{purchases.length}</p>
+            </div>
+            <ShoppingBag className="w-8 h-8 text-green-500" />
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-600 text-sm">Books Listed</p>
+              <p className="text-2xl font-bold text-gray-800">{listings.length}</p>
+            </div>
+            <BookOpen className="w-8 h-8 text-blue-500" />
+          </div>
+        </div>
+      </div>
+      {/* Recent Activity */}
+      <div className="bg-white rounded-xl shadow-lg p-6">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h3>
+        <div className="space-y-4">
+          <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+            <CheckCircle className="w-6 h-6 text-green-500" />
+            <div>
+              <p className="font-medium text-gray-800">Book purchased successfully</p>
+              <p className="text-sm text-gray-600">The Alchemist - 2 days ago</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+            <Heart className="w-6 h-6 text-red-500" />
+            <div>
+              <p className="font-medium text-gray-800">Added to wishlist</p>
+              <p className="text-sm text-gray-600">Atomic Habits - 3 days ago</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
   
   
 };
