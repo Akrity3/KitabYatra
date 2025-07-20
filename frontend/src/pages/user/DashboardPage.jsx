@@ -196,6 +196,135 @@ const DashboardPage = () => {
       </div>
     </div>
   );
+
+  // Edit Profile
+  const renderEditProfile = () => (
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">Edit Profile</h2>
+        {!isEditing && (
+          <button
+            onClick={handleEditProfile}
+            className="bg-yellow-500 text-black px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors flex items-center"
+          >
+            <Edit3 className="w-4 h-4 mr-2" />
+            Edit
+          </button>
+        )}
+      </div>
+      {successMessage && (
+        <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="flex items-center">
+            <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
+            <span className="text-green-800">{successMessage}</span>
+          </div>
+        </div>
+      )}
+      {/* Profile Photo Bubble */}
+      <div className="flex justify-center mb-6">
+        <div className="relative w-28 h-28">
+          <img
+            src={editForm.avatar || "https://ui-avatars.com/api/?name=User"}
+            alt="Profile"
+            className="rounded-full w-28 h-28 object-cover border-2 border-gray-200"
+          />
+          {isEditing && (
+            <label className="absolute bottom-0 right-0 bg-yellow-500 text-white p-2 rounded-full cursor-pointer shadow-md hover:bg-yellow-600 transition">
+              <Edit3 className="w-5 h-5" />
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={handleAvatarChange}
+              />
+            </label>
+          )}
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+          <input
+            type="text"
+            value={editForm.fullName}
+            onChange={e => setEditForm(prev => ({ ...prev, fullName: e.target.value }))}
+            disabled={!isEditing}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 ${!isEditing ? 'bg-gray-50' : ''} ${errors.fullName ? 'border-red-500' : 'border-gray-300'}`}
+          />
+          {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+          <input
+            type="email"
+            value={editForm.email}
+            onChange={e => setEditForm(prev => ({ ...prev, email: e.target.value }))}
+            disabled={!isEditing}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 ${!isEditing ? 'bg-gray-50' : ''} ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
+          />
+          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+          <input
+            type="tel"
+            value={editForm.phone}
+            onChange={e => setEditForm(prev => ({ ...prev, phone: e.target.value }))}
+            disabled={!isEditing}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 ${!isEditing ? 'bg-gray-50' : ''}`}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
+          <input
+            type="text"
+            value={editForm.address}
+            onChange={e => setEditForm(prev => ({ ...prev, address: e.target.value }))}
+            disabled={!isEditing}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 ${!isEditing ? 'bg-gray-50' : ''}`}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
+          <input
+            type="text"
+            value={editForm.city}
+            onChange={e => setEditForm(prev => ({ ...prev, city: e.target.value }))}
+            disabled={!isEditing}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 ${!isEditing ? 'bg-gray-50' : ''}`}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Country</label>
+          <input
+            type="text"
+            value={editForm.country}
+            onChange={e => setEditForm(prev => ({ ...prev, country: e.target.value }))}
+            disabled={!isEditing}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 ${!isEditing ? 'bg-gray-50' : ''}`}
+          />
+        </div>
+      </div>
+      {isEditing && (
+        <div className="flex space-x-4 mt-6">
+          <button
+            onClick={handleSaveProfile}
+            className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors flex items-center"
+          >
+            <Save className="w-4 h-4 mr-2" />
+            Save Changes
+          </button>
+          <button
+            onClick={() => setIsEditing(false)}
+            className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
+    </div>
+  );
+
   
   
 };
