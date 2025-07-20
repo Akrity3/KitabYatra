@@ -325,7 +325,226 @@ const DashboardPage = () => {
     </div>
   );
   
-  
+  // Wishlist section 
+  const renderWishlist = () => (
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">My Wishlist</h2>
+      {wishlistItems.length === 0 ? (
+        <div className="text-center py-12 text-gray-500">
+          Your wishlist is empty.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {wishlistItems.map((book) => (
+            <WishlistCard
+              key={book.id}
+              book={book}
+              onRemove={removeFromWishlist}
+              onView={(book) => {
+                alert(`Viewing: ${book.title}`);
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+  // Purchases
+  const renderPurchases = () => (
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">My Purchases</h2>
+      {purchases.length === 0 ? (
+        <div className="text-center py-12 text-gray-500">No purchases yet.</div>
+      ) : (
+        <div className="space-y-4">
+          {purchases.map((purchase) => (
+            <PurchaseCard key={purchase.id} purchase={purchase} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+  // Listings
+  const renderListings = () => (
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">My Listings</h2>
+      {listings.length === 0 ? (
+        <div className="text-center py-12 text-gray-500">No books listed yet.</div>
+      ) : (
+        <div className="space-y-4">
+          {listings.map((listing) => (
+            <ListingCard key={listing.id} listing={listing} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+  // --- ADDED: SALES HISTORY AND SHOPPING CART RENDERERS ---
+  const renderSalesHistory = () => (
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+        <Clock className="w-6 h-6 mr-2 text-blue-400"/> Sales History
+      </h2>
+      <div className="text-center py-12 text-gray-500">
+        No sales history yet. {/* Replace with your SalesHistoryCard, etc. */}
+      </div>
+    </div>
+  );
+
+  const renderShoppingCart = () => (
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+        <ShoppingCart className="w-6 h-6 mr-2 text-green-500"/> Shopping Cart
+      </h2>
+      <div className="text-center py-12 text-gray-500">
+        Your shopping cart is empty. {/* Replace with your ShoppingCartCard, etc. */}
+      </div>
+    </div>
+  );
+  // -----
+
+  // Sidebar & Main Layout
+  return !user ? (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-yellow-500"></div>
+    </div>
+  ) : (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+      <Navbar />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-xl shadow-lg p-6 sticky top-24">
+              <div className="text-center mb-6">
+                <img
+                  src={user.avatar || "https://ui-avatars.com/api/?name=User"}
+                  alt="Profile"
+                  className="w-20 h-20 rounded-full mx-auto mb-4 object-cover"
+                />
+                <h3 className="font-semibold text-gray-800">{user.fullName}</h3>
+                <p className="text-sm text-gray-600">{user.email}</p>
+                <p className="text-sm text-gray-500">
+                  {user.city}{user.city && user.country ? ', ' : ''}{user.country}
+                </p>
+              </div>
+              <nav className="space-y-2">
+                <button
+                  onClick={() => setActiveTab('overview')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center ${
+                    activeTab === 'overview' ? 'bg-yellow-50 text-yellow-700' : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <TrendingUp className="w-5 h-5 mr-3" />
+                  Overview
+                </button>
+                <button
+                  onClick={() => setActiveTab('editProfile')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center ${
+                    activeTab === 'editProfile' ? 'bg-yellow-50 text-yellow-700' : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <User className="w-5 h-5 mr-3" />
+                  Edit Profile
+                </button>
+                <button
+                  onClick={() => setActiveTab('updatePassword')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center ${
+                    activeTab === 'updatePassword' ? 'bg-yellow-50 text-yellow-700' : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <Lock className="w-5 h-5 mr-3" />
+                  Update Password
+                </button>
+                <button
+                  onClick={() => setActiveTab('sellBook')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center ${
+                    activeTab === 'sellBook' ? 'bg-yellow-50 text-yellow-700' : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <Package className="w-5 h-5 mr-3" />
+                  Sell Books
+                </button>
+
+                {/* New: Sales History */}
+                <button // <-- new
+                  onClick={() => setActiveTab('salesHistory')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center ${
+                    activeTab === 'salesHistory' ? 'bg-yellow-50 text-yellow-700' : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <Clock className="w-5 h-5 mr-3" />
+                  Sales History
+                </button>
+                {/* New: Shopping Cart */}
+                <button // <-- new
+                  onClick={() => setActiveTab('shoppingCart')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center ${
+                    activeTab === 'shoppingCart' ? 'bg-yellow-50 text-yellow-700' : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <ShoppingCart className="w-5 h-5 mr-3" />
+                  Shopping Cart
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('wishlist')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center justify-between ${
+                    activeTab === 'wishlist' ? 'bg-yellow-50 text-yellow-700' : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-center">
+                    <Heart className="w-5 h-5 mr-3" />
+                    Wishlist
+                  </div>
+                  {wishlistItems.length > 0 && (
+                    <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {wishlistItems.length}
+                    </span>
+                  )}
+                </button>
+                <button
+                  onClick={() => setActiveTab('purchases')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center ${
+                    activeTab === 'purchases' ? 'bg-yellow-50 text-yellow-700' : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <ShoppingBag className="w-5 h-5 mr-3" />
+                  My Purchases
+                </button>
+                <button
+                  onClick={() => setActiveTab('listings')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center ${
+                    activeTab === 'listings' ? 'bg-yellow-50 text-yellow-700' : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <BookOpen className="w-5 h-5 mr-3" />
+                  My Listings
+                </button>
+              </nav>
+            </div>
+          </div>
+          {/* Main content for each tab */}
+          <div className="lg:col-span-3">
+            {activeTab === 'overview' && renderOverview()}
+            {activeTab === 'editProfile' && renderEditProfile()}
+            {activeTab === 'updatePassword' && <UpdatePasswordForm />}
+            {activeTab === 'sellBook' && <SellBookForm />}
+            {activeTab === 'wishlist' && renderWishlist()}
+            {activeTab === 'purchases' && renderPurchases()}
+            {activeTab === 'listings' && renderListings()}
+            {/* NEW TABS */}
+            {activeTab === 'salesHistory' && renderSalesHistory()}
+            {activeTab === 'shoppingCart' && renderShoppingCart()}
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
   
   
 };
