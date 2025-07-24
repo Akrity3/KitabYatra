@@ -1,7 +1,7 @@
 import React from 'react';
-import Navbar from './components/common/Navbar';
-import HeroSection from './components/common/HeroSection.jsx';
-import Footer from './components/common/Footer.jsx';
+import Navbar from "../components/common/Navbar.jsx";
+import HeroSection from "../components/common/HeroSection.jsx";
+import Footer from "../components/common/Footer.jsx";
 
 const HomePage = () => {
   return (

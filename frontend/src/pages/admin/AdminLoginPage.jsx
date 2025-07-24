@@ -1,7 +1,6 @@
-// Admin login 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import SharedLoginForm from './components/common/SharedLoginForm';
+import SharedLoginForm from '../../components/common/SharedLoginForm.jsx';
 
 const AdminLoginPage = () => {
   const navigate = useNavigate();
@@ -9,7 +8,6 @@ const AdminLoginPage = () => {
   const handleAdminLogin = async (data, setError) => {
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
-      // Only allows the demo credentials
       if (
         data.email === 'admin@kitabyatra.com' &&
         data.password === 'admin123'
@@ -29,7 +27,7 @@ const AdminLoginPage = () => {
     <SharedLoginForm
       loginType="admin"
       onSubmit={handleAdminLogin}
-      loadingText="Accessing Admin Panel..."
+      loadingText="Login"
       showDemoInfo
       onClose={() => navigate('/')}
       footer={

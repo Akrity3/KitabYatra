@@ -1,9 +1,6 @@
-// UserLoginPage
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import SharedLoginForm from '../../../components/common/SharedLoginForm';
-
-
+import SharedLoginForm from '../../components/common/SharedLoginForm.jsx';
 
 const UserLoginPage = () => {
   const navigate = useNavigate();
@@ -31,7 +28,7 @@ const UserLoginPage = () => {
     <SharedLoginForm
       loginType="user"
       onSubmit={handleUserLogin}
-      loadingText="Signing In..."
+      loadingText="Login"
       onClose={() => navigate('/')}
       footer={
         <p className="text-gray-600">

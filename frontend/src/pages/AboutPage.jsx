@@ -1,6 +1,6 @@
 import React from 'react';
-import Navbar from './Navbar.jsx';
-import Footer from './Footer.jsx';
+import Navbar from "../components/common/Navbar.jsx";
+import Footer from "../components/common/Footer.jsx";
 import { BookOpen, Users, Heart, Award, Target, Globe, CheckCircle, Star } from 'lucide-react';
 
 const AboutPage = () => {

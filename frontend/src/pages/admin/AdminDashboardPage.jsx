@@ -7,7 +7,6 @@ import {
   UserCheck, UserX, Ban, Shield, Settings, LogOut, Bell,
   Star, MapPin, Clock, Phone, Mail
 } from 'lucide-react';
-
 const AdminDashboardPage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
@@ -435,13 +434,6 @@ const AdminDashboardPage = () => {
             </div>
 
             <div className="flex items-center space-x-4">
-              <button
-                onClick={() => navigate('/')}
-                className="flex items-center space-x-2 text-gray-300 hover:text-yellow-400 transition-colors"
-              >
-                <BookOpen className="w-5 h-5" />
-                <span>Go to Homepage</span>
-              </button>
               <button className="text-gray-300 hover:text-yellow-400 transition-colors">
                 <Bell className="w-6 h-6" />
               </button>
