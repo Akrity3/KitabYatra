@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Navbar from './Navbar.jsx';
-import Footer from './Footer.jsx';
+import Navbar from "../components/common/Navbar.jsx";
+import Footer from "../components/common/Footer.jsx";
 import { Search, Filter, Grid, List, BookOpen } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const BrowsePage = () => {
   const [viewMode, setViewMode] = useState('grid');
@@ -423,8 +423,7 @@ const BrowsePage = () => {
 
       <Footer />
     </div>
-  );   
-
+  );
 };
 
 export default BrowsePage;
