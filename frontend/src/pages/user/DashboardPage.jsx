@@ -1,25 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-
-// Importing UI components
-import Navbar from './Navbar.jsx';
-import Footer from './Footer.jsx';
-import SellBookForm from './SellBookForm.jsx';
-import WishlistCard from './WishlistCard.jsx';
-import PurchaseCard from './PurchaseCard.jsx';
-import ListingCard from './ListingCard.jsx';
-import UpdatePasswordForm from './UpdatePasswordForm.jsx';
-
-// Icon imports (Lucide)
+import Navbar from "../../components/common/Navbar.jsx";
+import Footer from "../../components/common/Footer.jsx";
+import SellBookForm from '../../components/user/SellBookForm.jsx';
+import WishlistCard from '../../components/user/WishlistCard.jsx';
+import PurchaseCard from '../../components/user/PurchaseCard.jsx';
+import ListingCard from '../../components/user/ListingCard.jsx';
+import UpdatePasswordForm from '../../components/user/UpdatePasswordForm.jsx';
 import { 
   User, Edit3, Lock, Package, Heart, ShoppingBag, 
   Eye, Settings, BookOpen, TrendingUp, Star, 
   Save, Camera, Mail, Phone, MapPin, Calendar,
   AlertCircle, CheckCircle, X, 
-  ShoppingCart, Clock // <-- new
+  ShoppingCart, Clock
 } from 'lucide-react';
-
-
 /**
  * DashboardPage displays the user's dashboard
  * Features: overview, profile editing, wishlist, purchases, listings, settings, etc.
@@ -324,7 +318,7 @@ const DashboardPage = () => {
       )}
     </div>
   );
-  
+
   // Wishlist section 
   const renderWishlist = () => (
     <div className="bg-white rounded-xl shadow-lg p-6">
@@ -545,8 +539,6 @@ const DashboardPage = () => {
       <Footer />
     </div>
   );
-  
-  
 };
 
 
