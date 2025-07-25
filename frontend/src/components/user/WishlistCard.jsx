@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Star, MapPin, Clock, X, ShoppingCart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { useAuth } from '../../context/AuthContext';
+import { cartService } from '../../services/cartService';
+import { getBookImageUrl } from '../../utils/imageUtils';
 
 /**
  * WishlistCard
@@ -12,6 +17,9 @@ import { Star, MapPin, Clock, X, ShoppingCart } from 'lucide-react';
  * - onAddToCart: function(book) to show toast or custom cart notification (optional)
  */
 const WishlistCard = ({ book, onRemove, onView, onAddToCart }) => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
   // Render up to 5 stars based on the rating
   const renderStars = (rating = 0) =>
     Array.from({ length: 5 }, (_, i) => (
@@ -22,32 +30,34 @@ const WishlistCard = ({ book, onRemove, onView, onAddToCart }) => {
     ));
 
   // Add to cart handler.
-  // Uses callback if provided, else saves to localStorage and notifies with alert.
-  const addToCart = () => {
+  // Uses callback if provided, else uses proper cart service and navigation.
+  const addToCart = async () => {
     if (onAddToCart) {
       onAddToCart(book);
       return;
     }
-    const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
-    const existingItem = cartItems.find(item => item.id === book.id);
-    let updatedCart;
-    if (existingItem) {
-      updatedCart = cartItems.map(item =>
-        item.id === book.id ? { ...item, quantity: item.quantity + 1 } : item
-      );
-    } else {
-      updatedCart = [...cartItems, { ...book, quantity: 1 }];
+
+    if (!user) {
+      toast.error('Please login to add items to cart');
+      navigate('/login');
+      return;
     }
-    localStorage.setItem('cartItems', JSON.stringify(updatedCart));
-    // Fallback simple notification:
-    window.alert('Book added to cart!');
+
+    try {
+      await cartService.addToCart(book._id || book.id);
+      toast.success(`${book.title} added to cart`);
+      navigate('/cart');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast.error('Failed to add to cart');
+    }
   };
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
       <div className="relative">
         <img
-          src={book.image || '/placeholder-book.png'}
+          src={getBookImageUrl(book)}
           alt={book.title || 'Book cover'}
           className="w-full h-48 object-cover"
         />
