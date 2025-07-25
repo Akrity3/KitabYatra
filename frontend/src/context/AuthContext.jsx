@@ -1,305 +1,259 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
-// Create context
-const AuthContext = createContext();
+import { toast } from 'sonner';
 
 // API base URL
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
-// Provider component
+// Create and export the context
+const AuthContext = createContext();
+export { AuthContext };
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token'));
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Check if user is logged in
-  const isLoggedIn = !!token && !!user;
-
-  // Initialize auth state
+  // Check if user is logged in on app start
   useEffect(() => {
-    const initializeAuth = async () => {
-      if (token) {
-        try {
-          const response = await fetch(`${API_BASE_URL}/auth/me`, {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
-          });
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+      fetchUserProfile();
+    }
+  }, []);
 
-          if (response.ok) {
-            const data = await response.json();
-            setUser(data.data.user);
-          } else {
-            // Token is invalid, clear it
-            localStorage.removeItem('token');
-            setToken(null);
-            setUser(null);
-          }
-        } catch (error) {
-          console.error('Auth initialization error:', error);
+  const fetchUserProfile = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const response = await fetch(`${API_BASE_URL}/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
+          setUser(data.data.user);
+        } else {
+          console.error('Invalid response format from server');
           localStorage.removeItem('token');
-          setToken(null);
+          setIsLoggedIn(false);
           setUser(null);
         }
+      } else {
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+        setUser(null);
       }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      localStorage.removeItem('token');
+      setIsLoggedIn(false);
+      setUser(null);
+    }
+  };
+
+  const login = async (email, password, isAdmin = false) => {
+    try {
+      setLoading(true);
+      const endpoint = isAdmin ? '/auth/admin-login' : '/auth/login';
+      
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          toast.error('API endpoint not found. Please check if the server is running.');
+          return { success: false, message: 'Server not available' };
+        }
+        
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
+          toast.error(data.message || 'Login failed');
+          return { success: false, message: data.message };
+        } else {
+          toast.error('Server error. Please try again later.');
+          return { success: false, message: 'Server error' };
+        }
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.data.token);
+      setUser(data.data.user);
+      setIsLoggedIn(true);
+      toast.success('Login successful!');
+      return { success: true, user: data.data.user };
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error('Network error. Please try again.');
+      return { success: false, message: 'Network error' };
+    } finally {
       setLoading(false);
-    };
+    }
+  };
 
-    initializeAuth();
-  }, [token]);
-
-  // Register user
   const register = async (userData) => {
     try {
-      setError(null);
+      setLoading(true);
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userData)
+        body: JSON.stringify(userData),
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setUser(data.data.user);
-        setToken(data.data.token);
-        localStorage.setItem('token', data.data.token);
-        return { success: true, data: data.data };
-      } else {
-        setError(data.message || 'Registration failed');
-        return { success: false, error: data.message || 'Registration failed' };
+      if (!response.ok) {
+        if (response.status === 404) {
+          toast.error('API endpoint not found. Please check if the server is running.');
+          return { success: false, message: 'Server not available' };
+        }
+        
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
+          toast.error(data.message || 'Registration failed');
+          return { success: false, message: data.message };
+        } else {
+          toast.error('Server error. Please try again later.');
+          return { success: false, message: 'Server error' };
+        }
       }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.data.token);
+      setUser(data.data.user);
+      setIsLoggedIn(true);
+      toast.success('Registration successful!');
+      return { success: true, user: data.data.user };
     } catch (error) {
       console.error('Registration error:', error);
-      setError('Network error. Please try again.');
-      return { success: false, error: 'Network error. Please try again.' };
+      toast.error('Network error. Please try again.');
+      return { success: false, message: 'Network error' };
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Login user
-  const login = async (credentials) => {
-    try {
-      setError(null);
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(credentials)
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setUser(data.data.user);
-        setToken(data.data.token);
-        localStorage.setItem('token', data.data.token);
-        return { success: true, data: data.data };
-      } else {
-        setError(data.message || 'Login failed');
-        return { success: false, error: data.message || 'Login failed' };
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setError('Network error. Please try again.');
-      return { success: false, error: 'Network error. Please try again.' };
-    }
-  };
-
-  // Admin login
-  const adminLogin = async (credentials) => {
-    try {
-      setError(null);
-      const response = await fetch(`${API_BASE_URL}/auth/admin-login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(credentials)
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setUser(data.data.user);
-        setToken(data.data.token);
-        localStorage.setItem('token', data.data.token);
-        return { success: true, data: data.data };
-      } else {
-        setError(data.message || 'Admin login failed');
-        return { success: false, error: data.message || 'Admin login failed' };
-      }
-    } catch (error) {
-      console.error('Admin login error:', error);
-      setError('Network error. Please try again.');
-      return { success: false, error: 'Network error. Please try again.' };
-    }
-  };
-
-  // Logout user
   const logout = async () => {
     try {
+      const token = localStorage.getItem('token');
       if (token) {
         await fetch(`${API_BASE_URL}/auth/logout`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
+          },
         });
       }
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      setUser(null);
-      setToken(null);
       localStorage.removeItem('token');
+      setUser(null);
+      setIsLoggedIn(false);
+      toast.success('Logged out successfully!');
     }
   };
 
-  // Update user profile
   const updateProfile = async (profileData) => {
     try {
-      setError(null);
-      const formData = new FormData();
-      
-      // Add profile data to form
-      Object.keys(profileData).forEach(key => {
-        if (profileData[key] !== undefined && profileData[key] !== null) {
-          formData.append(key, profileData[key]);
-        }
-      });
-
+      const token = localStorage.getItem('token');
       const response = await fetch(`${API_BASE_URL}/auth/profile`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
-        body: formData
+        body: JSON.stringify(profileData),
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setUser(data.data.user);
-        return { success: true, data: data.data };
-      } else {
-        setError(data.message || 'Profile update failed');
-        return { success: false, error: data.message || 'Profile update failed' };
+      if (!response.ok) {
+        if (response.status === 404) {
+          toast.error('API endpoint not found. Please check if the server is running.');
+          return { success: false, message: 'Server not available' };
+        }
+        
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
+          toast.error(data.message || 'Profile update failed');
+          return { success: false, message: data.message };
+        } else {
+          toast.error('Server error. Please try again later.');
+          return { success: false, message: 'Server error' };
+        }
       }
+
+      const data = await response.json();
+      setUser(data.data);
+      toast.success('Profile updated successfully!');
+      return { success: true };
     } catch (error) {
       console.error('Profile update error:', error);
-      setError('Network error. Please try again.');
-      return { success: false, error: 'Network error. Please try again.' };
+      toast.error('Network error. Please try again.');
+      return { success: false, message: 'Network error' };
     }
   };
 
-  // Change password
-  const changePassword = async (passwordData) => {
+  const changePassword = async (currentPassword, newPassword) => {
     try {
-      setError(null);
-      const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
-        method: 'POST',
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_BASE_URL}/auth/password`, {
+        method: 'PUT',
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(passwordData)
+        body: JSON.stringify({ currentPassword, newPassword }),
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        return { success: true, data: data.data };
-      } else {
-        setError(data.message || 'Password change failed');
-        return { success: false, error: data.message || 'Password change failed' };
+      if (!response.ok) {
+        if (response.status === 404) {
+          toast.error('API endpoint not found. Please check if the server is running.');
+          return { success: false, message: 'Server not available' };
+        }
+        
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
+          toast.error(data.message || 'Password change failed');
+          return { success: false, message: data.message };
+        } else {
+          toast.error('Server error. Please try again later.');
+          return { success: false, message: 'Server error' };
+        }
       }
+
+      const data = await response.json();
+      toast.success('Password changed successfully!');
+      return { success: true };
     } catch (error) {
       console.error('Password change error:', error);
-      setError('Network error. Please try again.');
-      return { success: false, error: 'Network error. Please try again.' };
+      toast.error('Network error. Please try again.');
+      return { success: false, message: 'Network error' };
     }
-  };
-
-  // Forgot password
-  const forgotPassword = async (email) => {
-    try {
-      setError(null);
-      const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        return { success: true, data: data.data };
-      } else {
-        setError(data.message || 'Password reset failed');
-        return { success: false, error: data.message || 'Password reset failed' };
-      }
-    } catch (error) {
-      console.error('Forgot password error:', error);
-      setError('Network error. Please try again.');
-      return { success: false, error: 'Network error. Please try again.' };
-    }
-  };
-
-  // Reset password
-  const resetPassword = async (resetData) => {
-    try {
-      setError(null);
-      const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(resetData)
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        return { success: true, data: data.data };
-      } else {
-        setError(data.message || 'Password reset failed');
-        return { success: false, error: data.message || 'Password reset failed' };
-      }
-    } catch (error) {
-      console.error('Reset password error:', error);
-      setError('Network error. Please try again.');
-      return { success: false, error: 'Network error. Please try again.' };
-    }
-  };
-
-  // Clear error
-  const clearError = () => {
-    setError(null);
   };
 
   const value = {
     user,
-    token,
-    isLoggedIn,
     loading,
-    error,
-    register,
+    isLoggedIn,
     login,
-    adminLogin,
+    register,
     logout,
     updateProfile,
     changePassword,
-    forgotPassword,
-    resetPassword,
-    clearError
   };
 
   return (
@@ -309,7 +263,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Custom hook for easy use
+// Hook to use auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

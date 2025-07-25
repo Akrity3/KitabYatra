@@ -1,10 +1,11 @@
 import React from 'react';
+import { getBookImageUrl } from '../../utils/imageUtils';
 
 const BookCard = ({ book, isLoggedIn, onViewDetails, onAddToWishlist, onAddToCart }) => (
   <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-200">
     <div className="relative">
       <img
-        src={book.image}
+        src={getBookImageUrl(book)}
         alt={book.title}
         className="w-full h-60 object-cover rounded-t-lg"
       />

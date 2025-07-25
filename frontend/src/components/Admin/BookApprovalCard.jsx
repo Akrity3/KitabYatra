@@ -1,11 +1,12 @@
 import React from 'react';
 import { CheckCircle, XCircle } from 'lucide-react';
+import { getBookImageUrl } from '../../utils/imageUtils';
 
 const BookApprovalCard = ({ book, onApprove, onReject }) => {
   return (
     <div className="border rounded-lg p-4 hover:shadow-lg transition-shadow">
       <div className="flex items-start space-x-4">
-        <img src={book.image} alt={book.title} className="w-20 h-28 object-cover rounded-lg" />
+        <img src={getBookImageUrl(book)} alt={book.title} className="w-20 h-28 object-cover rounded-lg" />
         <div className="flex-1">
           <div className="flex items-start justify-between">
             <div>
