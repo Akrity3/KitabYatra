@@ -5,9 +5,13 @@ import {
   User, Mail, Phone, MapPin, DollarSign, Package, FileText,
   Star, Calendar, Globe, Save, Eye, Plus, Trash2
 } from 'lucide-react';
+import { bookService } from '../../services/bookService';
+import { toast } from 'sonner';
+import { useAuth } from '../../context/AuthContext';
 
 const SellBookForm = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [bookImages, setBookImages] = useState([]);
   const [imagePreview, setImagePreview] = useState([]);
@@ -191,21 +195,27 @@ const SellBookForm = () => {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const formDataToSend = new FormData();
       
-      const bookData = {
-        ...formData,
-        images: bookImages,
-        id: `book_${Date.now()}`,
-        status: 'pending',
-        createdAt: new Date().toISOString(),
-        views: 0,
-        likes: 0
-      };
-
-      console.log('Book listing submitted:', bookData);
-      alert('Book listing submitted successfully! It will be reviewed by our team.');
+      // Add all form fields to FormData
+      Object.keys(formData).forEach(key => {
+        if (Array.isArray(formData[key])) {
+          formData[key].forEach(item => {
+            if (item.trim()) formDataToSend.append(key, item);
+          });
+        } else if (formData[key] !== '') {
+          formDataToSend.append(key, formData[key]);
+        }
+      });
+      
+      // Add images to FormData
+      bookImages.forEach(image => {
+        formDataToSend.append('images', image);
+      });
+      
+      const result = await bookService.createBookWithImages(formDataToSend);
+      
+      toast.success('Book listing submitted successfully! It will be reviewed by our team.');
       
       // Reset form
       setFormData({
@@ -250,9 +260,12 @@ const SellBookForm = () => {
       setBookImages([]);
       setImagePreview([]);
       setCurrentStep(1);
+      
+      // Navigate to dashboard
+      navigate('/dashboard');
     } catch (error) {
       console.error('Submission failed:', error);
-      alert('Failed to submit book listing. Please try again.');
+      toast.error(`Submission failed: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }

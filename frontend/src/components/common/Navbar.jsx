@@ -4,23 +4,19 @@ import {
   BookOpen, Menu, X, Bell, ShoppingCart, User, LogOut
 } from 'lucide-react';
 import ProfileDropdown from '../user/ProfileDropdown';
+import { useAuth } from '../../context/AuthContext';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [user, setUser] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const navigate = useNavigate();
+  const { user, isLoggedIn, logout } = useAuth();
 
   useEffect(() => {
-    const userData = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
-    if (userData && token) {
-      setUser(JSON.parse(userData));
-      const savedCart = localStorage.getItem('cartItems');
-      if (savedCart) {
-        setCartItems(JSON.parse(savedCart));
-      }
+    const savedCart = localStorage.getItem('cartItems');
+    if (savedCart) {
+      setCartItems(JSON.parse(savedCart));
     }
   }, []);
 
@@ -36,11 +32,9 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+  const handleLogout = async () => {
+    await logout();
     localStorage.removeItem('cartItems');
-    setUser(null);
     setCartItems([]);
     setIsProfileOpen(false);
     navigate('/');
@@ -60,9 +54,6 @@ const Navbar = () => {
         break;
       case 'sellBook':
         navigate('/dashboard', { state: { activeTab: 'sellBook' } });
-        break;
-      case 'cart':
-        navigate('/dashboard', { state: { activeTab: 'cart' } });
         break;
       case 'purchases':
         navigate('/dashboard', { state: { activeTab: 'purchases' } });
@@ -113,11 +104,11 @@ const Navbar = () => {
 
           {/* Desktop Auth/Profile Section */}
           <div className="hidden md:flex items-center space-x-4">
-            {user ? (
+            {isLoggedIn ? (
               <>
                 {/* Cart Icon */}
                 <button
-                  onClick={() => handleProfileAction('cart')}
+                  onClick={() => navigate('/cart')}
                   className="relative text-gray-300 hover:text-yellow-400 transition-colors"
                 >
                   <ShoppingCart className="w-6 h-6" />
@@ -140,11 +131,11 @@ const Navbar = () => {
                     className="flex items-center space-x-2 text-gray-300 hover:text-yellow-400 transition-colors"
                   >
                     <img
-                      src={user.avatar}
+                      src={user?.avatar || 'https://via.placeholder.com/32'}
                       alt="Profile"
                       className="w-8 h-8 rounded-full object-cover border-2 border-gray-600 hover:border-yellow-400 transition-colors"
                     />
-                    <span className="font-medium">{user.fullName.split(' ')[0]}</span>
+                    <span className="font-medium">{user?.fullName?.split(' ')[0] || user?.name}</span>
                   </button>
 
                   {isProfileOpen && (
@@ -213,18 +204,18 @@ const Navbar = () => {
 
               {/* Mobile Auth/Profile Links */}
               <div className="border-t border-gray-800 pt-3 mt-3">
-                {user ? (
+                {isLoggedIn ? (
                   <>
                     {/* User Info */}
                     <div className="flex items-center space-x-3 px-3 py-2 mb-3">
                       <img
-                        src={user.avatar}
+                        src={user?.avatar || 'https://via.placeholder.com/32'}
                         alt="Profile"
                         className="w-10 h-10 rounded-full object-cover"
                       />
                       <div>
-                        <p className="font-semibold text-white">{user.fullName}</p>
-                        <p className="text-sm text-gray-400">{user.email}</p>
+                        <p className="font-semibold text-white">{user?.fullName || user?.name}</p>
+                        <p className="text-sm text-gray-400">{user?.email}</p>
                       </div>
                     </div>
 
@@ -242,7 +233,7 @@ const Navbar = () => {
 
                     <button
                       onClick={() => {
-                        handleProfileAction('cart');
+                        navigate('/cart');
                         handleNavClick();
                       }}
                       className="flex items-center space-x-2 w-full px-3 py-2 text-gray-300 hover:text-yellow-400 transition-colors rounded-lg hover:bg-gray-800"
